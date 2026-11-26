@@ -1,18 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Diagnostics;
 
-namespace ExaminationSystem
+namespace ExaminationSystem;
+
+public abstract class Exam
 {
-    public class Exam : Questions
+    public TimeSpan Time {  get; set; }
+    public Questions[] Questions { get; set; }
+    public int NumberOfQeustions { get; set; }
+    public int NumberOfQuestions
     {
-        public int Time {  get; set; }
-        public int NumberOfQeustions { get; set; }
-        public Exam(string header, string body, double mark, Answer[] answers, Answer rightAnswer,int time, int NumberOfQeustions):base(header, body, mark, answers, rightAnswer)
-        {
-            Time = time;
-            this.NumberOfQeustions = NumberOfQeustions;
-        }
-        public ExamType ExamType { get; set; }
+        get { return Questions.Length; }
     }
+    public TimeSpan ElapsedTime { get; private set; }
+    public Exam(TimeSpan time, Questions[] questions)
+    {
+        Time = time;
+        Questions = questions;
+    }
+    public void StartExam()
+    {
+        Stopwatch stopwatch = Stopwatch.StartNew();
+
+        foreach (Questions question in Questions)
+        {
+            question.ShowQustion();
+            question.ReadAnswer();
+
+            Console.WriteLine();
+        }
+
+        stopwatch.Stop();
+
+        ElapsedTime = stopwatch.Elapsed;
+    }
+
+    public double CalculateGrade()
+    {
+        double grade = 0;
+
+        foreach (Questions question in Questions)
+        {
+            if (question.IsCorrect())
+            {
+                grade += question.Mark;
+            }
+        }
+
+        return grade;
+    }
+    public abstract void ShowExam();
 }

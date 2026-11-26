@@ -9,9 +9,24 @@ namespace ExaminationSystem
         public int SubjectId { get; set; }
         public string SubjectName { get; set; }
         public Exam Exam { get; set; }
+        public Subject(int subjectId, string subjectName)
+        {
+            SubjectId = subjectId;
+            SubjectName = subjectName;
+        }
+
         public void CreateExam(Exam exam)
         {
-            Console.WriteLine("Creating Exam not completed yet");
+            if (exam == null)
+            {
+                throw new ArgumentNullException(nameof(exam));
+            }
+
+            Exam = exam;
+        }
+        public override string ToString()
+        {
+            return $"Subject ID: {SubjectId}\nSubject Name: {SubjectName}";
         }
     }
 }
